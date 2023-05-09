@@ -1,4 +1,7 @@
-import { App, OnlineWorkingCopy } from "mendixplatformsdk";
+import { App, MendixPlatformClient, OnlineWorkingCopy, setPlatformConfig } from "mendixplatformsdk";
+
+import { getDuplicatedMicroflowsFromModel } from './DuplicatedFiles'
+import { ParsedQs } from 'qs';
 
 /**
  * Documentation
@@ -6,7 +9,7 @@ import { App, OnlineWorkingCopy } from "mendixplatformsdk";
  * @param {String} branch 
  * @returns 
  */
-const getWorkingCopyFromBranch = async( app : App ,branch : string ) => {
+export const getWorkingCopyFromBranch = async( app : App ,branch : string ) => {
     try {
         
         const workingCopy = await app.createTemporaryWorkingCopy(branch);
@@ -25,7 +28,7 @@ const getWorkingCopyFromBranch = async( app : App ,branch : string ) => {
  * @returns 
  */
 
-const openWorkingModel = async(workingCopy : OnlineWorkingCopy) =>{
+export const openWorkingModel = async(workingCopy : OnlineWorkingCopy) =>{
     try {
 
         const model = await workingCopy.openModel();
@@ -39,18 +42,7 @@ const openWorkingModel = async(workingCopy : OnlineWorkingCopy) =>{
     
 }
 
-const initializeProject =async ( appid : string, branch : string  ) => {
-  
-    try{
 
-        
 
-    }catch( err : any ){
-        throw new Error(err)
-    }
-}
 
-module.exports = {
-    getWorkingCopyFromBranch,
-    openWorkingModel
-}
+// export default initializeProject

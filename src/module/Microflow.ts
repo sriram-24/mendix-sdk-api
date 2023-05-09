@@ -1,3 +1,4 @@
-interface MicroflowObject {
+export interface MicroflowObject {
     name : String
 }
+

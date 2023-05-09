@@ -1,8 +1,11 @@
-import { Model } from "mendixmodelsdk"
+import { IModel, Model } from "mendixmodelsdk"
+import { MicroflowObject } from "./Microflow";
 
 
 
-const getDuplicatedMicroflowsFromModel  = ( model : Model ) : Array <MicroflowObject>  => {
+
+
+export const getDuplicatedMicroflowsFromModel  = ( model : IModel ) : Array <MicroflowObject>  => {
 
     let microflows : Array <String> = [];
     let duplicatedmicroflows : Array<MicroflowObject> = [];
