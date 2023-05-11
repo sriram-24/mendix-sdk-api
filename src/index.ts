@@ -1,9 +1,8 @@
 import express, { Express, Request, Response } from 'express';
 
-import { MicroflowObject } from './module/Microflow';
-import  { getWorkingCopyFromBranch, openWorkingModel } from './module/openProject';
-import { MendixPlatformClient, setPlatformConfig } from 'mendixplatformsdk';
-import { getDuplicatedMicroflowsFromModel } from './module/DuplicatedFiles';
+import { MainObject, MicroflowObject } from './module/Definitions';
+import { initializeProject } from './module/openProject';
+
 const bodyParser = require('body-parser');
 
 
@@ -16,38 +15,29 @@ app.use(bodyParser.json())
 
 const port = 4000
 
-
-const initializeProject =async ( appid : string, branch : string  ) => {
-  
-    try{
-    setPlatformConfig({mendixToken: process.env.MENDIX_TOKEN})
-    const client = new MendixPlatformClient()
-    const app = await client.getApp(appid)
-    const workingCopy = await getWorkingCopyFromBranch(app,branch)
-    const model = await openWorkingModel(workingCopy)
-    const duplicatedmicroflows = getDuplicatedMicroflowsFromModel(model)
-
-    return duplicatedmicroflows
-    
-
-    }catch( err : any ){
-        throw new Error(err)
-    }
-}
-
-app.get('/microflows/duplicated', (req : Request, res : Response ) =>{
+app.get('/project/performancereport', (req : Request, res : Response ) =>{
 
     const appid  = req.query.appid?.toString();
     const branch = req.query.branch?.toString();
+    const scope = req.query.scope?.toString();
+    const scopeArray = scope?.split(',');
+    console.log(scope);
+    
 
     if(appid && branch){
         
-        initializeProject(appid,branch).then((arr : Array<MicroflowObject> ) => {
+        initializeProject(appid,branch,scopeArray).then((arr : MainObject ) => {
+            
             res.json(arr)
+            
         }).catch(
             ( err : String ) =>{
-                console.log(err);
-                res.json(err);
+                console.log("error  from api : " +err);
+                let object:Object = {
+                    code:500,
+                    message : err
+                }
+                res.json(object);
             }
         )
     }

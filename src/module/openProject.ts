@@ -1,7 +1,8 @@
 import { App, MendixPlatformClient, OnlineWorkingCopy, setPlatformConfig } from "mendixplatformsdk";
 
-import { getDuplicatedMicroflowsFromModel } from './DuplicatedFiles'
+import { getDuplicatedMicroflowsFromModel, getDuplicatedPagesFromModel } from './DuplicatedFiles'
 import { ParsedQs } from 'qs';
+import { MainObject, MicroflowObject, PageObject, Scopes } from "./Definitions";
 
 /**
  * Documentation
@@ -16,8 +17,8 @@ export const getWorkingCopyFromBranch = async( app : App ,branch : string ) => {
         return workingCopy;
 
     } catch (error : any) {
-
-        throw new Error(error)
+        console.log(error)
+        throw error
         
     }
 }
@@ -35,11 +36,55 @@ export const openWorkingModel = async(workingCopy : OnlineWorkingCopy) =>{
         return model;
 
     } catch ( error : any ) {
-
-        throw new Error(error)
+        console.log(error)
+        throw error
 
     }
     
+}
+
+export const initializeProject = async( appid : string, branch : string, scopeArray: Array<string> | undefined ) => {
+  
+    try{
+        let mainObject : MainObject  = {
+            microflows : [],
+            pages : []
+        }
+
+        let duplicatedmicroflows : Array<MicroflowObject> = [];
+        let duplicatedPages : Array<PageObject> = [];
+
+        setPlatformConfig({mendixToken: process.env.MENDIX_TOKEN})
+        const client = new MendixPlatformClient()
+        const app = await client.getApp(appid)
+        const workingCopy = await getWorkingCopyFromBranch(app,branch)
+        const model = await openWorkingModel(workingCopy)
+        
+        scopeArray?.forEach((scope:String)=>{
+            
+        switch (scope) {
+            case Scopes.miroflows :
+                console.log('Duplicate microflow verification started');
+                duplicatedmicroflows = getDuplicatedMicroflowsFromModel(model)
+                mainObject.microflows = duplicatedmicroflows
+                break;
+            case Scopes.pages : 
+                console.log('Duplicate page verification started');
+                duplicatedPages = getDuplicatedPagesFromModel(model)
+                mainObject.pages = duplicatedPages
+                break;
+            default:
+                break;
+        }
+            
+        })
+
+        return mainObject
+        
+    }catch( err : any ){
+        console.log( "Error from function : " +err)
+        throw err
+    }
 }
 
 
