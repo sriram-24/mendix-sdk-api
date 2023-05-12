@@ -1,3 +1,5 @@
+import { ICommit } from "mendixplatformsdk"
+
 export interface MicroflowObject {
     name : string,
     excluded : boolean
@@ -23,4 +25,9 @@ export interface MainObject {
     microflows : Array<MicroflowObject>,
     pages ?: Array<PageObject>,
     nanoflows ?: Array<NanoflowObject>
+}
+
+export interface Branch {
+    name: string
+    latestCommit : ICommit
 }
