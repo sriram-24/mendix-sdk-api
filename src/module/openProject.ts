@@ -1,8 +1,8 @@
 import { App, MendixPlatformClient, OnlineWorkingCopy, setPlatformConfig } from "mendixplatformsdk";
 
-import { getDuplicatedMicroflowsFromModel, getDuplicatedPagesFromModel } from './DuplicatedFiles'
+import { getDuplicatedMicroflowsFromModel, getDuplicatedPagesFromModel, getDuplicatedNanoflowsFromModel } from './DuplicatedFiles'
 import { ParsedQs } from 'qs';
-import { MainObject, MicroflowObject, PageObject, Scopes } from "./Definitions";
+import { MainObject, MicroflowObject, NanoflowObject, PageObject, Scopes } from "./Definitions";
 
 /**
  * Documentation
@@ -53,6 +53,7 @@ export const initializeProject = async( appid : string, branch : string, scopeAr
 
         let duplicatedmicroflows : Array<MicroflowObject> = [];
         let duplicatedPages : Array<PageObject> = [];
+        let duplicatedNanoflows : Array<NanoflowObject> = [];
 
         setPlatformConfig({mendixToken: process.env.MENDIX_TOKEN})
         const client = new MendixPlatformClient()
@@ -63,18 +64,28 @@ export const initializeProject = async( appid : string, branch : string, scopeAr
         scopeArray?.forEach((scope:String)=>{
             
         switch (scope) {
+
             case Scopes.miroflows :
                 console.log('Duplicate microflow verification started');
                 duplicatedmicroflows = getDuplicatedMicroflowsFromModel(model)
                 mainObject.microflows = duplicatedmicroflows
                 break;
+
             case Scopes.pages : 
                 console.log('Duplicate page verification started');
                 duplicatedPages = getDuplicatedPagesFromModel(model)
                 mainObject.pages = duplicatedPages
                 break;
+
+            case Scopes.nanoflows : 
+                console.log('Duplicate nanoflow verification started');
+                duplicatedNanoflows = getDuplicatedNanoflowsFromModel(model)
+                mainObject.nanoflows = duplicatedNanoflows
+                break;
+
             default:
                 break;
+                
         }
             
         })

@@ -1,5 +1,5 @@
 import { IModel } from "mendixmodelsdk"
-import { MicroflowObject, PageObject } from "./Definitions";
+import { MicroflowObject, NanoflowObject, PageObject } from "./Definitions";
 
 /**
  * Documentation for getting duplicated microflows
@@ -58,3 +58,28 @@ export const getDuplicatedPagesFromModel = (model : IModel ) => {
     return duplicatedPages;
 }
 
+/**
+ * Documentation for getting duplicated nanoflows
+ * @param {IModel} model 
+ * @returns 
+ */
+
+export const getDuplicatedNanoflowsFromModel = (model : IModel) =>{
+
+    let duplicatedNanoflows : Array<NanoflowObject> = [];
+    
+    model.allNanoflows().forEach((nanoflow) =>{
+        
+        if(regexForDulicateFiles.test(nanoflow.name)){
+            
+            let object : NanoflowObject = {
+                name : nanoflow.name,
+                excluded : nanoflow.excluded
+            }
+            duplicatedNanoflows.push(object)
+        }
+
+    })
+    
+    return duplicatedNanoflows;
+}

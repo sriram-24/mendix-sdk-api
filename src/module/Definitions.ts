@@ -8,6 +8,11 @@ export interface PageObject {
     excluded:boolean
 }
 
+export interface NanoflowObject {
+    name:string,
+    excluded:boolean
+}
+
 export enum Scopes{
     miroflows = "microflows",
     pages = "pages",
@@ -16,5 +21,6 @@ export enum Scopes{
 
 export interface MainObject {
     microflows : Array<MicroflowObject>,
-    pages : Array<PageObject>
+    pages ?: Array<PageObject>,
+    nanoflows ?: Array<NanoflowObject>
 }
