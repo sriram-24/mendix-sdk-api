@@ -58,7 +58,7 @@ export const initializeProject = async( appid : string, branch : string, scopeAr
         setPlatformConfig({mendixToken: process.env.MENDIX_TOKEN})
         const client = new MendixPlatformClient()
         const app = await client.getApp(appid)
-        const workingCopy = await getWorkingCopyFromBranch(app,branch)
+        const workingCopy = await app.createTemporaryWorkingCopy(branch);
         const model = await openWorkingModel(workingCopy)
         
         scopeArray?.forEach((scope:String)=>{

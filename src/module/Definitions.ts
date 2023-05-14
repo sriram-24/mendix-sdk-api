@@ -15,6 +15,7 @@ export interface NanoflowObject {
     excluded:boolean
 }
 
+
 export enum Scopes{
     miroflows = "microflows",
     pages = "pages",
@@ -30,4 +31,20 @@ export interface MainObject {
 export interface Branch {
     name: string
     latestCommit : ICommit
+}
+export interface childObject{
+    id: number
+    name?:string
+    children?:Array<childObject>
+}
+
+export interface SecurityObject {
+    id: number
+    name:string
+    children:Array<childObject>
+}
+
+export interface RoleObject{
+    module:string
+    role:string
 }
